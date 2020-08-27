@@ -1,0 +1,319 @@
+#!/bin/bash
+#													SAUGAT ADHIKARI L2N7 [18029221]
+
+# Storing the user arguments in global variables.
+user_name=$1
+user_id=$2
+
+# Validating the number and nature of arguments passed into the function by the user. The program will exit everytime until the correct
+# number of parameters are passed.
+# Declaring a regural expresssion that holds any number from 0 to 9.
+re='^[0-9]+$'
+
+# If both the username and id are left blank, the following message will pop up.
+if [[ $user_name == "" && $user_id == "" ]]
+then
+  echo -e "\n No parameters found. Please enter first name and then the ID number sperated by a space. \n"
+  exit
+# Checking if the user provides more than two arguments.
+elif [[ $# -gt 2 ]]
+then
+  echo -e "\n Invalid number of parameters found.Please enter first name and then the ID number sperated by a space. \n"
+  exit
+ # Checking if the user provides less than two arguments.
+elif [[ $# -lt 2 ]]
+then
+  echo -e "\n Invalid number of parameters found.Please enter first name and then the ID number sperated by a space. \n"
+  exit
+# Checking the username input of the user against the regular expression. If it is true, then a invalid input message pops up.
+elif [[ $user_name =~ $re ]]
+then
+	echo -e "Invalid input. Username cannot be a number. \n"
+	echo -e "Please try again. Please enter first name and then the ID number sperated by a space. \n"
+	exit
+fi
+
+# Checking if the user inputs number when asked for user ID.
+until [[ $user_id =~ $re ]]
+do
+	echo -e "Invalid input. User ID cannot be a string. \n"
+	echo -e "Please try again. Please enter first name and then the ID number sperated by a space. \n"
+	exit
+done
+
+# Function to start the program with validation of secret key.
+program_starter() {
+
+# Declaring a secret key for user verification.
+secret_key=9841
+
+# The chances provided for secret key input are five.
+# Using while loop that provides user with only five chances.
+chance=5
+while [ $chance -ge 1 ]
+do
+	echo
+	echo -e "Please enter the secret key :- \c"
+	read user_key
+# If the user provides a valid secret key, he/she will be greeted and will enter the program.
+	if [[ $user_key == $secret_key ]]
+	then
+		echo
+		echo -e "You have been successfully verified. \n"
+		now=$(date)
+		echo -e "\t\t\t Welcome [$user_id] Mr/s $user_name to the program. \n"
+		echo -e "\t\t\t The current date and time is:- $now \n"
+# If the user provides correct secret key, the loop must be broken and the program must continue.
+		break
+# If the user provides an empty secret key, this message will pop up.
+	elif [ ${#user_key} == 0 ]
+	then
+		echo -e "Invalid input. Please do not leave the key input blank. \n"
+# The chance of user will decrease everytime he/she enters an invalid secret key.
+		chance=`expr $chance - 1 `
+		echo -e "You have $chance chances left. \n"
+
+	elif [ $user_key != $secret_key ]
+	then
+		echo -e "Sorry, you entered an invalid secret key. \n"
+		chance=`expr $chance - 1 `
+		echo -e "You have $chance chances left. \n"
+	fi
+
+#when all the five chances are exploited, the program exits on the user.
+	if [ $chance == 0 ]
+	then
+		echo -e "Sorry, You cannot be verified. \n"
+		echo -e "Bye $user_name! \n"
+		figlet BYE!!
+# This lets the program sleep for a second before exiting.
+		sleep 1
+		exit
+	fi
+done
+}
+
+
+# Function for storing country names and codes along with verifications.
+country_choice() {
+# This is a table that depicts all the available countries and codes.
+echo -e "These are the available countries and their respective codes. \n"
+echo "****************************************"
+echo -e "COUNTRY \t\t CODE"
+echo "---------------------------------------"
+echo -e "Australia \t\t AUS"
+echo -e "Bangladesh \t\t BAN"
+echo -e "Nepal \t\t\t NEP"
+echo -e "India \t\t\t IND"
+echo -e "England \t\t ENG"
+echo -e "*************************************** \n"
+
+# Predeclaring England as the favourite cricket team.
+fav_team="ENG"
+
+# Declaring a function that asks user for the best cricket team in order to decrease redundacy.
+team_choice () {
+echo -e "Please enter the code(case sensitive) of the best cricket team:- \c"
+read user_team
+}
+
+team_choice
+
+# until loop that doesnt break ends until the user input is three characters.
+until [ ${#user_team} == 3 ]
+	do
+		echo -e "Invalid input. Please enter the three letter code. \n"
+		team_choice
+	done
+
+# Until loops goes on executing until the team selected by the user is England (favourite team).	
+until [[ $user_team == $fav_team ]]
+do
+	echo -e "Unfortunately, you have choosed the wrong team. \n"
+	team_choice
+done
+
+
+# Some information to be displayed when the user selects the correct cricket team.
+echo -e "\t\t\tCongratulations! You have choosed the correct team. \n"
+echo -e "Here is some information about England National Cricket Team: \n"
+echo -e "\t\t\t\t   England National Crictet Team "
+echo
+echo "----------------------------------------------------------------------------------------------------------------"
+echo -e "As of 16 February 2020, England have played 1,022 Test matches, winning 371 and losing 304 (with 347 draws). 
+         \n In Test series against Australia, England play for The Ashes, one of the most famous trophies in all of sport,
+         \n and they have won the urn on 32 occasions. England have also played 746 ODIs, winning 375."
+echo -e "---------------------------------------------------------------------------------------------------------------- \n"		 
+
+}
+
+#Function for displaying the cricket players,codes and user input validations.
+player_choice(){
+echo -e "These are the available five-star cricket players and their respective codes. \n"
+echo "***************************************"
+echo -e "PLAYER \t\t\t CODE"
+echo "---------------------------------------"
+echo -e "Paras Khadka \t\t PK"
+echo -e "Virat Kohli \t\t VK"
+echo -e "David Warner \t\t DW"
+echo -e "Ben Stokes \t\t BS"
+echo -e "Ross Taylor \t\t RT"
+echo -e "*************************************** \n"
+
+name_loop
+
+# Defining a custom prompt for the select loop inside a shell script, using the PS3 environment variable.
+PS3="Please choose one of the following option:- "
+select user_option in $player1 $player2 $player3
+do
+# This is a case function that matches the user input against various conditions.
+	case $user_option in 
+			$player1 )
+# the following condition checks if the stated file exists in the current directory or not.
+					if [ -e $player1.txt ]
+					then
+# If the file is available, this command reads into the file.
+						cat $player1.txt
+						program_replay
+					else
+						echo -e "The reuqested file cannot be found. You will have to start again by the choosing the best cricket team. \n"
+						sleep 1
+# If the file requested by the user cannot be found, the program restarts itself back to choosing best team step.
+						country_choice
+						player_choice
+							
+					fi
+					break
+			;;
+			
+			$player2 )
+					if [ -e $player2.txt ]
+					then
+						cat $player2.txt
+						program_replay
+					else
+						echo -e "The reuqested file cannot be found. You will have to start again by the choosing the best cricket team. \n"
+						sleep 1
+						country_choice
+						player_choice
+						
+					fi
+					break
+			;;
+			
+			$player3 )
+					if [ -e $player3.txt ]
+					then
+						cat $player3.txt
+						program_replay
+					else
+						echo -e "The reuqested file cannot be found. You will have to start again by the choosing the best cricket team. \n"
+						sleep 1
+						country_choice
+						player_choice
+						
+					fi
+					break
+			
+			;;
+# Checking for any invalid input by the user other than the provided options.
+			* ) 
+				echo -e "This an invalid input. Please try again. Choose from option 1,2 and 3. \n"
+				
+			;;
+# End of case.
+	esac
+# End of select.
+done
+
+}
+
+# Funtion that prompts user to enter the code for three best cricketers.
+name_loop(){
+echo -e "Enter the codes(case sensitive) for three best cricketers separated by a space:- \c"                                                                                                                      read player1 player2 player3
+read player1 player2 player3
+# Calling the named function that validates the user input against the appropriate player codes.
+player_valid
+}
+
+player_valid () {
+# Declaring a flag variable that is used as a counter into the while loop.
+				flag_var=1
+				while [ $flag_var = 1 ]
+				do
+# Validating if the user provides all three required codes or leaves any argument empty.
+					if  [[ -z $player1 ]] | [[ -z $player2 ]] | [[ -z $player3 ]]
+					then
+						echo -e "You have entered invalid number of codes. Please enter all three codes. \n"
+						echo -e "NOTE: The codes are case sensitive and must be sperated by a space. \n"
+						name_loop
+					else
+# while loop ends with the following declaration.
+						flag_var=0
+					fi
+				done
+
+# Validating the user input codes against the available codes of the cricket players.
+				until [ $player1 == "VK" ] || [ $player1 == "PK" ] || [ $player1 == "DW" ] || [ $player1 == "BS" ] || [ $player1 == "RT" ]
+				do
+					echo -e "The first code you have entered is wrong. Please refer to the table and try again. \n"
+					name_loop
+				done
+				
+				until [ $player2 == "VK" ] || [ $player2 == "PK" ] || [ $player3 == "DW" ] || [ $player2 == "BS" ] || [ $player2 == "RT" ]
+				do	
+					echo -e "The second code you have entered is wrong. Please refer to the table and try again. \n"
+					name_loop
+				done
+				
+				until [ $player3 == "VK" ] || [ $player3 == "PK" ] || [ $player3 == "DW" ] || [ $player3 == "BS" ] || [ $player3 == "RT" ]
+				do		
+					echo -e "The third code you have entered is wrong. Please refer to the table and try again. \n"
+					name_loop
+				done
+}
+
+
+
+
+
+# Function that prompts the user if he/she wants to restarts the program or just end it.
+program_replay() {
+
+echo -e "Do you want to replay the program?(Y/N) \c" 
+read user_replay
+# Calling the named function that validates the user input on whether or not he/she wants to replay the program.
+replay_verify
+}
+
+# Funtion that validates the input of the user.
+replay_verify(){
+case $user_replay in
+	"Y" ) 
+		echo -e "That's good. Lets go again. \n"
+		sleep 1
+		country_choice
+		player_choice
+	;;
+	
+	"N" ) 
+		echo -e "Thank you $user_name for running this program. \n"
+		echo
+		figlet BYE!
+		sleep 1
+		exit
+	;;
+	
+	* )
+		echo -e "Invalid input. Please choose between 'Y/N'. \n"
+		program_replay
+	;;
+esac
+}
+
+# Calling all the required functions in the appropriate order.
+program_starter
+country_choice
+player_choice
+program_replay
+
